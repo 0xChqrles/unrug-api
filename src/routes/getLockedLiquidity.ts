@@ -1,7 +1,8 @@
 import { EKUBO_POSITIONS, Entrypoint, UNRUG_FACTORY_ADDRESS } from '@/constants/contracts'
 import { addressRegex } from '@/utils/address'
+import { multiCallContract } from '@/utils/contract'
 import type { FastifyInstance } from 'fastify'
-import { CallData, getChecksumAddress, ProviderInterface } from 'starknet'
+import { CallData, getChecksumAddress, ProviderInterface, uint256 } from 'starknet'
 
 export function getLockedLiquidityRoute(fastify: FastifyInstance, provider: ProviderInterface) {
   fastify.get(
@@ -59,27 +60,52 @@ export function getLockedLiquidityRoute(fastify: FastifyInstance, provider: Prov
           },
         }
 
-        const ekuboFees = await provider.callContract({
-          contractAddress: EKUBO_POSITIONS,
-          entrypoint: Entrypoint.GET_TOKEN_INFOS,
-          calldata: CallData.compile([
-            ekuboId,
-            poolKey,
-            bounds
-          ]),
-        })
+        const [ekuboFees, totalSupply, token0Decimals, token1Decimals] = await multiCallContract(provider, [
+          {
+            contractAddress: EKUBO_POSITIONS,
+            entrypoint: Entrypoint.GET_TOKEN_INFOS,
+            calldata: CallData.compile([
+              ekuboId,
+              poolKey,
+              bounds
+            ]),
+          },
+          {
+            contractAddress: poolKey.token0,
+            entrypoint: Entrypoint.TOTAL_SUPPLY,
+          },
+          {
+            contractAddress: poolKey.token0,
+            entrypoint: Entrypoint.DECIMALS,
+          },
+          {
+            contractAddress: poolKey.token1,
+            entrypoint: Entrypoint.DECIMALS,
+          }
+        ])
+        
+        const totalSupplyBN = uint256.uint256ToBN({ low: totalSupply[0], high: totalSupply[1] })
 
         // wrap and send response
-        reply.send([
-          {
-            amount: ekuboFees[5],
-            tokenAddress: poolKey.token0,
-          },
-          {
-            amount: ekuboFees[6],
-            tokenAddress: poolKey.token1,
-          },
-        ])
+        reply.send({
+          quoteTokenAddress: poolKey.token1,
+          totalSupply: totalSupplyBN.toString(),
+          liquidity: BigInt(ekuboFees[4]).toString(),
+          lockedAmount: BigInt(ekuboFees[5]).toString(),
+          lockedPercentage: (parseInt(ekuboFees[5], 16) / Number(totalSupplyBN)) * 100,
+          lockedPair: [
+            {
+              amount: BigInt(ekuboFees[5]).toString(),
+              decimals: Number(token0Decimals[0]),
+              tokenAddress: poolKey.token0,
+            },
+            {
+              amount: BigInt(ekuboFees[6]).toString(),
+              decimals: Number(token1Decimals[0]),
+              tokenAddress: poolKey.token1,
+            },
+          ],
+        })
       } catch (error) {
         console.error(error)
         return reply.status(500).send({ message: 'Internal server error' })
