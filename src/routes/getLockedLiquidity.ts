@@ -1,7 +1,23 @@
 import { EKUBO_POSITIONS, Entrypoint, UNRUG_FACTORY_ADDRESS } from '@/constants/contracts'
 import { addressRegex } from '@/utils/address'
 import type { FastifyInstance } from 'fastify'
-import { CallData, getChecksumAddress, ProviderInterface } from 'starknet'
+import { CallData, getChecksumAddress, num, ProviderInterface } from 'starknet'
+
+interface PoolKey {
+  token0: string
+  token1: string
+  fee: string
+  tickSpacing: string
+  extension: string
+}
+
+function hexToDecimal(hex: string): string {
+  return num.toBigInt(hex).toString()
+}
+
+function getPair(poolKey: PoolKey): string {
+  return `${poolKey.token0}-${poolKey.token1}-${hexToDecimal(poolKey.fee)}-${hexToDecimal(poolKey.tickSpacing)}-${poolKey.extension}`
+}
 
 export function getLockedLiquidityRoute(fastify: FastifyInstance, provider: ProviderInterface) {
   fastify.get(
@@ -69,15 +85,20 @@ export function getLockedLiquidityRoute(fastify: FastifyInstance, provider: Prov
           ]),
         })
 
+        console.log(ekuboFees, lockedLiquidity, liquidityPositionDetails)
+
         // wrap and send response
         reply.send([
           {
-            amount: ekuboFees[5],
-            tokenAddress: poolKey.token0,
-          },
-          {
-            amount: ekuboFees[6],
-            tokenAddress: poolKey.token1,
+            pair: getPair(poolKey),
+            lockedPercentage: 100,
+            burnedPercentage: 100,
+            lockedAmount0: hexToDecimal(ekuboFees[5]),
+            burnedAmount0: hexToDecimal(ekuboFees[5]),
+            pooledAmount0: hexToDecimal(ekuboFees[5]),
+            lockedAmount1: hexToDecimal(ekuboFees[6]),
+            burnedAmount1: hexToDecimal(ekuboFees[6]),
+            pooledAmount1: hexToDecimal(ekuboFees[6]),
           },
         ])
       } catch (error) {
