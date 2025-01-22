@@ -8,11 +8,6 @@ export function declareRoutes(
   fastify: FastifyInstance,
   provider: RpcProvider
 ) {
-  // Enable CORS
-  fastify.register(fastifyCors, {
-    origin: '*'
-  })
-
   getStatusRoute(fastify, provider)
   getLockedLiquidityRoute(fastify, provider)
   trending(fastify)
