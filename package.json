@@ -26,6 +26,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@fastify/cors": "10.0.2",
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
     "fastify-plugin": "^4.5.1",

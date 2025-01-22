@@ -226,6 +226,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fastify/cors@npm:10.0.2":
+  version: 10.0.2
+  resolution: "@fastify/cors@npm:10.0.2"
+  dependencies:
+    fastify-plugin: ^5.0.0
+    mnemonist: 0.39.8
+  checksum: 50a6a369fab65d8d4c1566682048efafef673c8ac85db9bf70588ad7317565030de0ae15262205156e306026cf0bcba823cf8be9710ddf026e59eed23413b055
+  languageName: node
+  linkType: hard
+
 "@fastify/error@npm:^3.3.0, @fastify/error@npm:^3.4.0":
   version: 3.4.1
   resolution: "@fastify/error@npm:3.4.1"
@@ -1707,6 +1717,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fastify-plugin@npm:^5.0.0":
+  version: 5.0.1
+  resolution: "fastify-plugin@npm:5.0.1"
+  checksum: 2c207716fe02b00ce73449b102b890b434af21299fef35f37a34b491bd2f9ee1d95c753b11041ffbbe845411260cf4b547440bc2c3c3203ab4e2837825600961
+  languageName: node
+  linkType: hard
+
 "fastify@npm:^4.26.2":
   version: 4.28.1
   resolution: "fastify@npm:4.28.1"
@@ -2750,6 +2767,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mnemonist@npm:0.39.8":
+  version: 0.39.8
+  resolution: "mnemonist@npm:0.39.8"
+  dependencies:
+    obliterator: ^2.0.1
+  checksum: af611a79546949deb7f5044cc9a501fefe9e576a1a2f6461b2636eced1104ca7e066641add6358bc9b7b8c79cc7b080caad1e1d70fc400ae7961a955515f18bc
+  languageName: node
+  linkType: hard
+
 "ms@npm:^2.1.1, ms@npm:^2.1.3":
   version: 2.1.3
   resolution: "ms@npm:2.1.3"
@@ -2873,6 +2899,13 @@ __metadata:
     define-properties: ^1.2.1
     es-object-atoms: ^1.0.0
   checksum: 51fef456c2a544275cb1766897f34ded968b22adfc13ba13b5e4815fdaf4304a90d42a3aee114b1f1ede048a4890381d47a5594d84296f2767c6a0364b9da8fa
+  languageName: node
+  linkType: hard
+
+"obliterator@npm:^2.0.1":
+  version: 2.0.5
+  resolution: "obliterator@npm:2.0.5"
+  checksum: 49575c428d66941326f265b8962bbce05c2a209c180e6ebf49d07e6d6cf2e6ab3f805289ad58aec49e74825344c97e790e5658b55e226a8cb4f57d866db3adf5
   languageName: node
   linkType: hard
 
@@ -3884,6 +3917,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "unrug-api@workspace:."
   dependencies:
+    "@fastify/cors": 10.0.2
     "@types/node": 22.9.0
     "@typescript-eslint/eslint-plugin": ^7.9.0
     dotenv: ^16.4.5
