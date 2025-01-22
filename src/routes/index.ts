@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
-
 import { getLockedLiquidityRoute } from './getLockedLiquidity'
-import { ProviderInterface, RpcProvider } from 'starknet'
+import { RpcProvider } from 'starknet'
+import { trending } from './trending'
 
 export function declareRoutes(
   fastify: FastifyInstance,
@@ -9,6 +9,7 @@ export function declareRoutes(
 ) {
   getStatusRoute(fastify, provider)
   getLockedLiquidityRoute(fastify, provider)
+  trending(fastify)
 }
 
 //
