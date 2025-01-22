@@ -4,6 +4,7 @@ import Fastify from 'fastify'
 import { declareRoutes } from './routes'
 import { RpcProvider } from 'starknet'
 import { getNodeURL } from './utils/provider'
+import fastifyCors from '@fastify/cors'
 
 export type AppConfiguration = {
   app: {
@@ -24,6 +25,11 @@ export async function buildApp() {
 
   // create provider
   const provider = new RpcProvider({ nodeUrl: getNodeURL(process.env.JUNO_API_KEY) })
+
+  // Enable CORS
+  await app.register(fastifyCors, {
+    origin: '*',
+  })
 
   // Declare routes
   declareRoutes(app, provider)

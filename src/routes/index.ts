@@ -2,7 +2,6 @@ import type { FastifyInstance } from 'fastify'
 import { getLockedLiquidityRoute } from './getLockedLiquidity'
 import { RpcProvider } from 'starknet'
 import { trending } from './trending'
-import fastifyCors from '@fastify/cors'
 
 export function declareRoutes(
   fastify: FastifyInstance,
